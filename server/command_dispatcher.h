@@ -12,6 +12,8 @@ using t_command_event = std::function<void(tcp_session*, stream_buffer_abstract*
 using t_command_id = int;
 using t_command_len = int;
 
+#define HEADER_SIZE int(sizeof(t_command_id) + sizeof(t_command_len))
+
 class command_dispatcher 
 {
 public:

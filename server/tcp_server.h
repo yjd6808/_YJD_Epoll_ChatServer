@@ -12,7 +12,7 @@ public:
     void close();
 private:
     int _fd;
-    epoll_model _epoll;
     tcp_session_container _session_container;
     command_dispatcher _command_dispatcher;
+    epoll_model _epoll;
 };

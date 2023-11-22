@@ -1,5 +1,5 @@
 // 작성자: 윤정도
-
+//
 #pragma once
 
 #include <array>
@@ -35,7 +35,7 @@ public:
             return -1;
 
         int ret;
-        std::memcpy(&ret, _buf.data(), sizeof(int));
+        std::memcpy(&ret, _buf.data() + _read_pos, sizeof(int));
         _read_pos += sizeof(int);
         return ret;
     }

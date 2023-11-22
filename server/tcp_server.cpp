@@ -8,8 +8,8 @@
 #include <arpa/inet.h>
 
 tcp_server::tcp_server(int capacity) 
-    : _epoll(&_session_container, &_command_dispatcher)
-    , _session_container(capacity) 
+    : _session_container(capacity) 
+    , _epoll(&_session_container, &_command_dispatcher)
 {}
 
 void tcp_server::setup(int port) {
@@ -21,6 +21,12 @@ void tcp_server::setup(int port) {
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;
 
+    const int enable = 1;
+    if (setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0) {
+        fprintf(stderr, "setsockopt(SO_REUSEADDR) error(%d):%s\n", errno, strerror(errno));
+        return;
+    }
+
     if (::bind(_fd, (sockaddr*)&addr, sizeof(sockaddr_in)) == - 1)  {
         fprintf(stderr, "bind error(%d):%s\n", errno, strerror(errno));
         return;
@@ -28,6 +34,11 @@ void tcp_server::setup(int port) {
 
     if (::listen(_fd, 5) == -1) {
         fprintf(stderr, "listen error(%d):%s\n", errno, strerror(errno));
+        return;
+    }
+
+
+    if (!_epoll.enroll(_fd, EPOLLIN)) {
         return;
     }
 

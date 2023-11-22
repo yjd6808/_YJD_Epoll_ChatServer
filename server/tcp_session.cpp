@@ -86,20 +86,18 @@ int tcp_session::recv() {
         if (recv_bytes == -1) {
             if (errno != EWOULDBLOCK) {
                 fprintf(stderr, "recv error(%d):%s\n", errno, strerror(errno));
-                break;
-            } else {
-                return -1;
-            } 
+            }
+            break;
         }
 
         _recv_buffer.move_write_pos(recv_bytes);
+        total_recv_bytes += recv_bytes;
     }
         
     return total_recv_bytes;
 }
 
 void tcp_session::dispatch_command(command_dispatcher* dispatcher) {
-    constexpr int HEADER_SIZE = sizeof(t_command_id) + sizeof(t_command_len); 
     int dispatched_command_count = 0;
 
     for (;;) {
