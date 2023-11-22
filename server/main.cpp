@@ -8,14 +8,15 @@
 #define SERVER_PORT                 9999
 #define SERVER_SESSION_COUNT        50
 
-volatile bool _running = true;
+volatile bool running = true;
+tcp_server server(SERVER_SESSION_COUNT);
 
 void cli_routine() {
     for (;;) {
         std::string read;
         std::cin >> read;
         if (read == "exit") {
-            _running = false;
+            running = false;
             break;
         }
     }
@@ -23,9 +24,8 @@ void cli_routine() {
 
 int main() {
     std::thread cli_thread(cli_routine);
-    tcp_server server(SERVER_SESSION_COUNT);
     server.setup(SERVER_PORT);
-    while (_running) {
+    while (running) {
         server.poll_events();
     }
     cli_thread.join();

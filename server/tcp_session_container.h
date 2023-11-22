@@ -17,6 +17,8 @@ public:
     void disconnect_all();
     void disconnect(int fd);
 
+    void broadcast(stream_buffer_abstract* buffer);
+
     int capacity() const { return _capacity; }
 private:
     int _capacity; 

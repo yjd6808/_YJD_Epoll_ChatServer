@@ -73,6 +73,7 @@ int main() {
 
 void print_menu() {
     printf("0. echo message\n");
+    printf("1. chat message\n");
     printf("9. termniate program\n");
     printf("select> ");
 }
@@ -93,6 +94,11 @@ void run_command(int cmd, stream_buffer_abstract* buffer) {
         std::string str = buffer->read_string(str_len);
 
         printf("echo message: %s\n", str.c_str());
+    } else if (cmd == CMDID_CHAT_MESSAGE) {
+        int str_len = buffer->read_int();
+        std::string str = buffer->read_string(str_len);
+
+        printf("chat message: %s\n", str.c_str());
     }
 }
 
@@ -109,8 +115,15 @@ void send_command(int cmd) {
         send_buffer.write_int(cmd_len);
         send_buffer.write_int(msg.length());
         send_buffer.write_string(msg);
-    } else if (cmd == 2) {
+    } else if (cmd == CMDID_CHAT_MESSAGE) {
+        std::string msg;
+        printf("write chat message> ");
+        std::cin >> msg;
 
+        cmd_len = sizeof(int) + msg.length();
+        send_buffer.write_int(cmd_len);
+        send_buffer.write_int(msg.length());
+        send_buffer.write_string(msg);
     } else {
         fprintf(stderr, "invalid command id(%d)\n", cmd);
         return;
@@ -181,7 +194,7 @@ void recv_thread() {
         }
     }
 
-    printf("recv thread terminated\n");
+    printf("recv thread terminated\nenter any key to exit program.\n");
 }
 
 bool recv_command() {

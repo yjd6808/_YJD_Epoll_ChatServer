@@ -10,6 +10,8 @@ public:
     void setup(int port);
     void poll_events();
     void close();
+
+    void broadcast(stream_buffer_abstract* buffer);
 private:
     int _fd;
     tcp_session_container _session_container;

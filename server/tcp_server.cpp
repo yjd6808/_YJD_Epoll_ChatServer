@@ -44,6 +44,7 @@ void tcp_server::setup(int port) {
     }
 
     _command_dispatcher.register_event(CMDID_ECHO_MESSAGE, command_fn::echo_message);
+    _command_dispatcher.register_event(CMDID_CHAT_MESSAGE, command_fn::chat_message);
 
     printf("server can poll events\n");
 }
@@ -60,3 +61,6 @@ void tcp_server::close() {
     printf("server closed\n");
 }
 
+void tcp_server::broadcast(stream_buffer_abstract* buffer) {
+    _session_container.broadcast(buffer);
+}

@@ -75,3 +75,10 @@ void tcp_session_container::disconnect_all() {
 
     _session_map.clear();
 }
+
+
+void tcp_session_container::broadcast(stream_buffer_abstract* buffer) {
+    for (auto it = _session_map.begin(); it != _session_map.end(); ++it) {
+        it->second->send(buffer->readable_data(), buffer->get_write_pos());
+    }
+}

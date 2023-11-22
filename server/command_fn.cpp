@@ -2,6 +2,9 @@
 
 #include "command_fn.h"
 #include "cmdlist.h"
+#include "tcp_server.h"
+
+extern tcp_server server;
 
 void command_fn::echo_message(tcp_session* session, stream_buffer_abstract* buffer) {
     int str_len = buffer->read_int();
@@ -15,4 +18,18 @@ void command_fn::echo_message(tcp_session* session, stream_buffer_abstract* buff
     send_buffer.write_int(str_len);
     send_buffer.write_string(str);
     session->send(send_buffer.readable_data(), send_buffer.get_write_pos());
+}
+
+void command_fn::chat_message(tcp_session* session, stream_buffer_abstract* buffer) {
+    int str_len = buffer->read_int();
+    std::string str = buffer->read_string(str_len);
+    printf("chat_message: %s\n", str.c_str());
+
+    stream_buffer<32> send_buffer;
+    int command_len = sizeof(int) + str_len;
+    send_buffer.write_int(CMDID_CHAT_MESSAGE);
+    send_buffer.write_int(command_len);
+    send_buffer.write_int(str_len);
+    send_buffer.write_string(str);
+    server.broadcast(&send_buffer);
 }

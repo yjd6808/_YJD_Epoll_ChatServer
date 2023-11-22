@@ -7,4 +7,5 @@
 struct command_fn 
 {
     static void echo_message(tcp_session* session, stream_buffer_abstract* buffer);
+    static void chat_message(tcp_session* session, stream_buffer_abstract* buffer);
 };
