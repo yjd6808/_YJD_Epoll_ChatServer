@@ -1,6 +1,7 @@
 // 작성자: 윤정도
 
 #include "command_fn.h"
+#include "cmdlist.h"
 
 void command_fn::echo_message(tcp_session* session, stream_buffer_abstract* buffer) {
     int str_len = buffer->read_int();

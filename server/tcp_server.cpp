@@ -1,6 +1,7 @@
 // 작성자: 윤정도
 
 #include "tcp_server.h"
+#include "cmdlist.h"
 #include "command_fn.h"
 
 #include <unistd.h>
